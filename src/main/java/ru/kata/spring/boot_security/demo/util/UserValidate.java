@@ -31,6 +31,6 @@ public class UserValidate implements Validator {
         if (foundUser.isEmpty())
             return;
 
-        errors.rejectValue("username", "", "Это имя уже занято");
+        errors.rejectValue("name", "", "Это имя уже занято");
     }
 }

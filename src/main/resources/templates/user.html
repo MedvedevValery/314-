@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>User info</title>
 </head>
@@ -13,18 +13,15 @@
         <th>Email</th>
         <th>Role</th>
     </tr>
+    <br>
     <tr>
         <td th:text="${user.getId()}"></td>
         <td th:text="${user.getUsername()}"></td>
         <td th:text="${user.getAge()}"></td>
         <td th:text="${user.getEmail()}"></td>
-        <td>
-            <ul th:each="role: ${user.getRoles()}" th:text="${role.getName().replace('ROLE_', '') + ' '}">role</ul>
-        </td>
+        <td th:each="role : ${user.getRoles()}" th:text="${role.getName()}"></td>
     </tr>
 <br>
-<hr/>
-<hr/>
 <form th:action="@{/auth/logout}" th:method="POST">
     <button type="submit">Log out</button>
 </form>

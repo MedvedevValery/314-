@@ -30,6 +30,5 @@ public class RegistrationService {
         Role role = new Role("ROLE_USER", Collections.singleton(user));
         user.setRoles(Collections.singleton(role));
         userRepository.save(user);
-        roleRepository.save(role);
     }
 }

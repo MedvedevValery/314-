@@ -6,16 +6,24 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.services.RegistrationService;
 import ru.kata.spring.boot_security.demo.services.UserService;
+import ru.kata.spring.boot_security.demo.util.UserValidate;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
     private final UserService userService;
+    private final UserValidate userValidate;
+    private final RegistrationService registrationService;
 
     @Autowired
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, UserValidate userValidate, RegistrationService registrationService) {
         this.userService = userService;
+        this.userValidate = userValidate;
+        this.registrationService = registrationService;
     }
 
     @GetMapping()
@@ -30,19 +38,21 @@ public class AdminController {
         return "admin/show";
     }
 
-//    @GetMapping("/new")
-//    public String newUser(@ModelAttribute("user") User user) {
-//        return "admin/new";
-//    }
+    @GetMapping("/new")
+    public String newUser(@ModelAttribute("user") User user) {
+        return "admin/new";
+    }
 
     @PostMapping()
-    public String create(@ModelAttribute("user") User user,
+    public String create(@ModelAttribute("user") @Valid User user,
                          BindingResult bindingResult) {
+        userValidate.validate(user, bindingResult);
+
         if (bindingResult.hasErrors())
             return "admin/new";
 
-        userService.save(user);
-        return "redirect:admin/users";
+        registrationService.register(user);
+        return "redirect:admin";
     }
 
     @GetMapping("/edit")
@@ -52,18 +62,19 @@ public class AdminController {
     }
 
     @PutMapping("/edit")
-    public String update(@ModelAttribute("user") User user, BindingResult bindingResult,
+    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
                          @RequestParam(value = "id") int id) {
+
         if (bindingResult.hasErrors())
             return "admin/edit";
 
         userService.update(id, user);
-        return "redirect:admin/users";
+        return "redirect:/admin";
     }
 
     @DeleteMapping("/delete")
     public String delete(@RequestParam(value = "id") int id) {
         userService.delete(id);
-        return "redirect:admin/users";
+        return "redirect:/admin";
     }
 }

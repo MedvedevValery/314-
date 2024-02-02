@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
 
@@ -22,19 +23,21 @@ public class User implements UserDetails {
     private String name;
 
     @Column(name = "password")
+    @Size(min = 3, message = "Минимум 3 символа")
+    @NotEmpty(message = "Где пароль?")
     private String password;
 
-    @Min(value = 0, message = "Age should be greater than 0")
+    @Min(value = 0, message = "Не тот возраст")
     @Column(name = "age")
     private int age;
 
-    @NotEmpty(message = "Where email?")
-    @Email(message = "It's not email")
+    @NotEmpty(message = "Введи почту")
+    @Email(message = "Это не почта")
     @Column(name = "email")
     private String email;
 
     @Column(name = "role")
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 

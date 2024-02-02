@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 import ru.kata.spring.boot_security.demo.services.RegistrationService;
 import ru.kata.spring.boot_security.demo.util.UserValidate;
 
@@ -21,11 +22,13 @@ import javax.validation.Valid;
 public class AuthController {
     private UserValidate userValidate;
     private RegistrationService registrationService;
+    private UserRepository userRepository;
 
     @Autowired
-    public AuthController(UserValidate userValidate, RegistrationService registrationService) {
+    public AuthController(UserValidate userValidate, RegistrationService registrationService, UserRepository userRepository) {
         this.userValidate = userValidate;
         this.registrationService = registrationService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/login")
@@ -49,13 +52,15 @@ public class AuthController {
         return "redirect:/auth/login";
     }
 
-    @PostMapping("/user")
+    @GetMapping("/user")
     public String userPage(@ModelAttribute("user") User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User userDetails = (User) authentication.getPrincipal();
+        User userDetails = userRepository.findByName(authentication.getName()).get();
         user.setName(userDetails.getName());
         user.setId(userDetails.getId());
+        user.setAge(userDetails.getAge());
         user.setEmail(userDetails.getEmail());
+        user.setRoles(userDetails.getRoles());
         return "user";
     }
 
