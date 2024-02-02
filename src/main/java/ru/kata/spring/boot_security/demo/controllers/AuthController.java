@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 import ru.kata.spring.boot_security.demo.services.RegistrationService;
+import ru.kata.spring.boot_security.demo.services.UserService;
 import ru.kata.spring.boot_security.demo.util.UserValidate;
 
 import javax.validation.Valid;
@@ -22,13 +23,13 @@ import javax.validation.Valid;
 public class AuthController {
     private UserValidate userValidate;
     private RegistrationService registrationService;
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    public AuthController(UserValidate userValidate, RegistrationService registrationService, UserRepository userRepository) {
+    public AuthController(UserValidate userValidate, RegistrationService registrationService, UserService userService) {
         this.userValidate = userValidate;
         this.registrationService = registrationService;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @GetMapping("/login")
@@ -55,7 +56,7 @@ public class AuthController {
     @GetMapping("/user")
     public String userPage(@ModelAttribute("user") User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User userDetails = userRepository.findByName(authentication.getName()).get();
+        User userDetails = userService.findByName(authentication.getName()).get();
         user.setName(userDetails.getName());
         user.setId(userDetails.getId());
         user.setAge(userDetails.getAge());

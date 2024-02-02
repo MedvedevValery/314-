@@ -62,11 +62,8 @@ public class AdminController {
     }
 
     @PutMapping("/edit")
-    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
-                         @RequestParam(value = "id") int id) {
-
-        if (bindingResult.hasErrors())
-            return "admin/edit";
+    public String update(@ModelAttribute("user") User user, @RequestParam(value = "id") int id) {
+        user.setPassword(userService.show(id).getPassword());
 
         userService.update(id, user);
         return "redirect:/admin";
