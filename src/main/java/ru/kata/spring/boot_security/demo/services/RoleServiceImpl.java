@@ -7,10 +7,7 @@ import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 
-import java.util.List;
-
 @Service
-@Transactional(readOnly = true)
 public class RoleServiceImpl implements RoleService {
     private RoleRepository roleRepository;
 
@@ -20,25 +17,36 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<Role> index() {
-        return roleRepository.findAll();
-    }
-
-    @Override
     @Transactional
     public void save(Role role) {
         roleRepository.save(role);
     }
 
     @Override
-    @Transactional
-    public void addRoleToUser(User user, Role role) {
-        user.getRoles().add(role);
-        role.getUsers().add(user);
+    public Role getRoleById(int id) {
+        return roleRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Role show(int id) {
-        return roleRepository.findById(id).orElse(null);
+    public Role getRoleByUser(User user) {
+        return roleRepository.findByUser(user).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRoleById(int id) {
+        roleRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRoleByUser(User user) {
+        roleRepository.deleteByUser(user);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRole(Role role) {
+        roleRepository.delete(role);
     }
 }

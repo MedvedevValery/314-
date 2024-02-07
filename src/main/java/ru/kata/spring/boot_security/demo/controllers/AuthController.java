@@ -52,21 +52,4 @@ public class AuthController {
         registrationService.register(user);
         return "redirect:/auth/login";
     }
-
-    @GetMapping("/user")
-    public String userPage(@ModelAttribute("user") User user) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User userDetails = userService.findByName(authentication.getName()).get();
-        user.setName(userDetails.getName());
-        user.setId(userDetails.getId());
-        user.setAge(userDetails.getAge());
-        user.setEmail(userDetails.getEmail());
-        user.setRoles(userDetails.getRoles());
-        return "user";
-    }
-
-    @PostMapping("/logout")
-    public String logoutPage() {
-        return "redirect:/auth/login";
-    }
 }
