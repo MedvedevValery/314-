@@ -74,12 +74,10 @@
                                             <td id="emailTd" th:text="${userFromList.getEmail()}"></td>
                                             <td id="roleTd" th:each="role : ${userFromList.getRoles()}" th:text="${role.getName()}"></td>
                                             <td>
-                                                <button th:id="${userFromList.getId()}" type="button" class="btn btn-primary editUser" data-toggle="modal" data-target="#editModal">Edit</button>
+                                                <button type="button" class="btn btn-primary editUser" data-toggle="modal" data-target="#editModal">Edit</button>
                                             </td>
                                             <td>
-                                                <form th:method="DELETE" th:action="'/admin/delete?id='+${userFromList.getId()}">
-                                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                                </form>
+                                                <button type="button" class="btn btn-danger deleteUser" data-toggle="modal" data-target="#myModalDelete">Delete</button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -157,7 +155,59 @@
         </div>
     </form>
 </div>
-<!--END OF EDIT USER-->
+<!-------->
+<!-- Modal-->
+<div>
+    <form class="formDeleteUser">
+        <div id="myModalDelete" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDelete">Delete user</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row bg-white " >
+                            <div class="col-6 mx-auto text-center font-weight-bold">
+                                ID
+                                <input type="number" name="id" id="idDelete" readonly class="form-control" ></div>
+                        </div>
+                        <div class="row  bg-white " >
+                            <div class="col-6 mx-auto text-center font-weight-bold my-2">
+                                First name
+                                <input type="text" name="name" id="nameDelete" readonly class="form-control"></div>
+                        </div>
+
+                        <div class="row bg-white " >
+                            <div class="col-6 mx-auto text-center font-weight-bold my-2">
+                                Age
+                                <input type="number" name="age" id="ageDelete" readonly class="form-control" ></div>
+                        </div>
+                        <div class="row bg-white " >
+                            <div class="col-6 mx-auto text-center font-weight-bold">
+                                Email
+                                <input type="email" name="email" id="emailDelete" readonly class="form-control"></div>
+                        </div>
+                        <div class="row bg-white " >
+                            <div class="col-6 mx-auto text-center font-weight-bold">
+                                Role
+                                <input type="text" name="role" id="roleDelete" readonly class="form-control"></div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit"  data-dismiss="modal"  class="btn btn-danger deleteBtn">Delete</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
 <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 <script src="/webjars/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -174,7 +224,7 @@
 
     //для модального окно при изменении
     on(document, 'click', '.editUser', (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         const father = e.target.parentNode.parentNode;
         const id = father.firstElementChild.innerHTML;
         const name = father.children[1].innerHTML;
@@ -189,11 +239,46 @@
 
     on(document, 'click', '.editBtn', (e) => {
         let formData = $(".formEditUser").serializeArray();
-        console.log($('#idInput').val());
         $.ajax({
             url: '/admin/edit?id='+$('#idInput').val(),
             method: 'PUT',
             data: formData,
+            success: function () {
+                window.location.href = "/admin"
+            },
+            error: function (xhr, type, exception) {
+                window.location.href = "/admin"
+            },
+        });
+    })
+
+    //при удалении
+    on(document, 'click', '.deleteUser', (e) => {
+        // e.preventDefault();
+        const father = e.target.parentNode.parentNode;
+        const id = father.firstElementChild.innerHTML;
+        const name = father.children[1].innerHTML;
+        const age = father.children[2].innerHTML;
+        const email = father.children[3].innerHTML;
+        const role = father.children[4].innerHTML;
+        $('#idDelete').val(id);
+        $('#nameDelete').val(name);
+        $('#ageDelete').val(age);
+        $('#emailDelete').val(email);
+        $('#roleDelete').val(role);
+        $('#myModalDelete').modal();
+    })
+
+    on(document, 'click', '.deleteBtn', (e) => {
+        $.ajax({
+            url: '/admin/delete?id='+$('#idDelete').val(),
+            method: 'DELETE',
+            success: function () {
+                window.location.href = "/admin"
+            },
+            error: function (xhr, type, exception) {
+                window.location.href = "/admin"
+            },
         });
     })
 </script>

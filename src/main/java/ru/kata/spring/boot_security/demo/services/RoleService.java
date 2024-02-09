@@ -8,8 +8,6 @@ import java.util.List;
 public interface RoleService {
     void save(Role role);
     Role getRoleById(int id);
-    Role getRoleByUser(User user);
     void deleteRoleById(int id);
-    void deleteRoleByUser(User user);
     void deleteRole(Role role);
 }

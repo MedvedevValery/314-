@@ -37,7 +37,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(name = "role")
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Role> roles;
 
     public User() {

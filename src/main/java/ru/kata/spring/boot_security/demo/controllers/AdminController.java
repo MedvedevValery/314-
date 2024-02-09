@@ -71,14 +71,9 @@ public class AdminController {
         user.setName(name);
         user.setAge(age);
         user.setEmail(email);
-
-        for (Role oldRole : userService.show(id).getRoles()) {
-            oldRole.setUser(null);
-            roleService.deleteRoleById(oldRole.getId());
-        }
-
-        userService.show(id).getRoles().add(new Role("ROLE_"+role, user));
-        user.setRoles(userService.show(id).getRoles());
+        Role newRole = new Role("ROLE_"+role);
+        user.setRoles(Collections.singleton(newRole));
+        roleService.save(newRole);
         userService.update(id, user);
         return "redirect:/admin";
     }

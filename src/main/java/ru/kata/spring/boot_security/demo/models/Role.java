@@ -16,14 +16,10 @@ public class Role implements GrantedAuthority {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne
-    private User user;
-
     public Role() {}
 
-    public Role(String name, User user) {
+    public Role(String name) {
         this.name = name;
-        this.user = user;
     }
 
     public int getId() {
@@ -40,14 +36,6 @@ public class Role implements GrantedAuthority {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     @Override

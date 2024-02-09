@@ -61,9 +61,6 @@ public class UserServiceImpl implements UserService {
         if (user.isEmpty())
             throw new UsernameNotFoundException("User not found");
 
-//        Set<GrantedAuthority> grantedAuthoritySet = new HashSet<>();
-//        user.get().getRoles().stream().forEach(role -> {grantedAuthoritySet.add(new SimpleGrantedAuthority(role.getName()));});
-
         return user.get();
     }
 }

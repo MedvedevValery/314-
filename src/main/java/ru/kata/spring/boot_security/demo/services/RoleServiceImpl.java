@@ -28,20 +28,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role getRoleByUser(User user) {
-        return roleRepository.findByUser(user).orElse(null);
-    }
-
-    @Override
     @Transactional
     public void deleteRoleById(int id) {
         roleRepository.deleteById(id);
-    }
-
-    @Override
-    @Transactional
-    public void deleteRoleByUser(User user) {
-        roleRepository.deleteByUser(user);
     }
 
     @Override
