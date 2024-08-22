@@ -34,7 +34,7 @@ public class AdminController {
 
     @GetMapping()
     public String usersPage(Model model) {
-        model.addAttribute("listUser", userService.index());
+        model.addAttribute("listUser", userService.getAllUsers());
         model.addAttribute("thisUser", userService.findByName(SecurityContextHolder.getContext().getAuthentication().getName()).get());
         return "admin/users";
     }
