@@ -16,6 +16,8 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
+    private RoleRepository roleRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
@@ -65,19 +67,6 @@ public class UserServiceImpl implements UserService {
 
         return user.get();
     }
-    @Service
-    public class RegistrationService {
-        private UserRepository userRepository;
-        private RoleRepository roleRepository;
-        private PasswordEncoder passwordEncoder;
-
-        @Autowired
-        public RegistrationService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
-            this.userRepository = userRepository;
-            this.roleRepository = roleRepository;
-            this.passwordEncoder = passwordEncoder;
-        }
-
         @Transactional
         public void register(User user) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -86,8 +75,6 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
         }
 
-        public String encodePassword(String password) {
-            return passwordEncoder.encode(password);
-        }
-    }
+
+
 }

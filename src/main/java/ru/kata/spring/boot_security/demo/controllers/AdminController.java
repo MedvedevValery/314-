@@ -8,9 +8,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.services.RegistrationService;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
+import ru.kata.spring.boot_security.demo.services.UserServiceImpl;
 import ru.kata.spring.boot_security.demo.util.UserValidate;
 
 import javax.validation.Valid;
@@ -22,14 +22,12 @@ public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
     private final UserValidate userValidate;
-    private final RegistrationService registrationService;
 
     @Autowired
     public AdminController(UserService userService, RoleService roleService, UserValidate userValidate, RegistrationService registrationService) {
         this.userService = userService;
         this.roleService = roleService;
         this.userValidate = userValidate;
-        this.registrationService = registrationService;
     }
 
     @GetMapping()
@@ -60,7 +58,7 @@ public class AdminController {
         if (bindingResult.hasErrors())
             return "admin/new";
 
-        registrationService.register(user);
+        userService.register(user);
         return "redirect:admin";
     }
 

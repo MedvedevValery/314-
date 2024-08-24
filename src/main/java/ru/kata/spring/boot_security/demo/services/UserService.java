@@ -15,6 +15,7 @@ public interface UserService extends UserDetailsService {
     void update(int id, User updatedUser);
     void delete(int id);
     Optional<User> findByName(String name);
+    void register(User user);
 
     @Override
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
