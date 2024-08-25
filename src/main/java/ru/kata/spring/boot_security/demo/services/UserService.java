@@ -16,7 +16,7 @@ public interface UserService extends UserDetailsService {
     void delete(int id);
     Optional<User> findByName(String name);
     void register(User user);
-
+     static String encodePassword(String password);
     @Override
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 }

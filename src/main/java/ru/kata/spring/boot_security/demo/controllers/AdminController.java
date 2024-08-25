@@ -24,7 +24,7 @@ public class AdminController {
     private final UserValidate userValidate;
 
     @Autowired
-    public AdminController(UserService userService, RoleService roleService, UserValidate userValidate, RegistrationService registrationService) {
+    public AdminController(UserService userService, RoleService roleService, UserValidate userValidate) {
         this.userService = userService;
         this.roleService = roleService;
         this.userValidate = userValidate;
@@ -65,7 +65,7 @@ public class AdminController {
     @PutMapping("/edit")
     public String update(@RequestParam(value = "id") int id, String name, String password, String email, int age, String role) {
         User user = new User();
-        user.setPassword(password.length() < 3 ? userService.show(id).getPassword() : registrationService.encodePassword(password));
+        user.setPassword(password.length() < 3 ? userService.show(id).getPassword() : UserService.encodePassword(password));
         user.setName(name);
         user.setAge(age);
         user.setEmail(email);

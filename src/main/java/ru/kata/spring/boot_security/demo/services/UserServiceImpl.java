@@ -67,13 +67,17 @@ public class UserServiceImpl implements UserService {
 
         return user.get();
     }
-        @Transactional
+        @Override
         public void register(User user) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             Role role = new Role("ROLE_USER");
             user.setRoles(Collections.singleton(role));
             userRepository.save(user);
         }
+    @Override
+    public static String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
 
 
 
