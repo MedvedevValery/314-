@@ -1,27 +1,43 @@
 package ru.kata.spring.boot_security.demo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.models.Role;
-import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
+import ru.kata.spring.boot_security.demo.entities.Role;
+import ru.kata.spring.boot_security.demo.entities.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
-public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private PasswordEncoder passwordEncoder;
+public class UserServiceImpl implements UserService{
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+
+    private UserRepository userRepository;
+    private BCryptPasswordEncoder passwordEncoder;
+
+
+    public UserServiceImpl(UserRepository userRepository
+            , BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Transactional
+    @Override
+    public void saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 
     @Override
@@ -30,55 +46,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User show(int id) {
-        Optional<User> foundUser = userRepository.findById(id);
-        return foundUser.orElse(null);
+    public User getUserById(Long id) {
+        return userRepository.findById(id).get();
     }
 
     @Override
-    @Transactional
-    public void save(User user) {
-        userRepository.save(user);
+    public User loadUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
-
-    @Override
-    @Transactional
-    public void update(int id, User updatedUser) {
-        updatedUser.setId(id);
-        userRepository.save(updatedUser);
-    }
-
-    @Override
-    @Transactional
-    public void delete(int id) {
-        userRepository.deleteById(id);
-    }
-
-    @Override
-    public Optional<User> findByName(String name) {
-        return userRepository.findByName(name);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByName(username);
-        if (user.isEmpty())
-            throw new UsernameNotFoundException("User not found");
-
-        return user.get();
-    }
-        @Override
-        public void register(User user) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            Role role = new Role("ROLE_USER");
-            user.setRoles(Collections.singleton(role));
-            userRepository.save(user);
-        }
-    @Override
-    public static String encodePassword(String password) {
-        return passwordEncoder.encode(password);
-    }
-
-
 
 }
+
+
