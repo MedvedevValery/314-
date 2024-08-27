@@ -27,7 +27,7 @@ public class UserValidate implements Validator {
     public void validate(Object target, Errors errors) {
         User user = (User) target;
 
-        Optional<User> foundUser = userRepository.findByName(user.getUsername());
+        Optional<User> foundUser = Optional.ofNullable(userRepository.findByUsername(user.getUsername()));
         if (foundUser.isEmpty())
             return;
 

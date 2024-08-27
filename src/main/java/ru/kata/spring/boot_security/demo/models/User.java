@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.entities;
+package ru.kata.spring.boot_security.demo.models;
 
 
 import org.hibernate.annotations.Fetch;
@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users",uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
 public class User implements UserDetails {
 
     @Id
@@ -24,7 +24,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "username")
-    private String username;
+    private  String username;
 
     @Column(name = "password")
     private String password;
@@ -41,7 +41,7 @@ public class User implements UserDetails {
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<ru.kata.spring.boot_security.demo.entities.Role> roles;
+    private Set<Role> roles;
 
     public Long getId() {
         return id;
@@ -57,9 +57,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toSet());
+        return roles;
     }
 
     @Override
@@ -110,15 +108,15 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public Collection<ru.kata.spring.boot_security.demo.entities.Role> getRoles() {
+    public Collection<ru.kata.spring.boot_security.demo.models.Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<ru.kata.spring.boot_security.demo.entities.Role> roles) {
+    public void setRoles(Set<ru.kata.spring.boot_security.demo.models.Role> roles) {
         this.roles = roles;
     }
 
-    public User(String username, String password, int age, String email, Set<ru.kata.spring.boot_security.demo.entities.Role> roles) {
+    public User(String username, String password, int age, String email, Set<ru.kata.spring.boot_security.demo.models.Role> roles) {
         this.username = username;
         this.password = password;
         this.age = age;
